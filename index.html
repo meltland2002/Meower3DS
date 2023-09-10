@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Meower 3DS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+<body>
+  <h2>Meower 3DS</h2>
+  <small id='smalver'>If you're seeing this message, your device might not support/allow JavaScript!</small><br>
+  <button onclick='document.getElementById("test").innerHTML = "<small></small>"'>Clear</button><button onclick='checkqueue()'>Fetch</button><br><br>
+  <input type='text' id='post'><button onclick='post()'>Post!</button>
+  <p id='test'><small></small></p>
+  <script type="text/javascript">
+const vers = "v1.0.0"
+const ip = "192.168.1.xxx" // set this to your computer's ip
+const port = "5000"
+
+document.getElementById("smalver").innerHTML = vers + "<br>No fetched incoming"
+
+function post() {
+  var xhttp = new XMLHttpRequest();
+  var compit = document.getElementById("post").value
+  xhttp.open("GET", "http://" + ip + ":" + port +"/post/" + encodeURIComponent(compit));
+  xhttp.send();
+  document.getElementById("post").value = ""
+}
+
+function checkqueue() {
+  qwer = new Date();
+  document.getElementById("smalver").innerHTML = vers + "<br>Last fetch at " + qwer.toLocaleString()
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       console.log(xhttp.responseText)
+       // alert(xhttp.responseText)
+       // var q = JSON.parse(xhttp.responseText)
+       var q = xhttp.responseText
+       var qu = JSON.parse(q)
+       var lp = 0
+       while (lp != qu.length) {
+         qa = qu[lp]
+         console.log(qa)
+         try {
+           if (qa.val.post_origin == "home") {
+             const para = document.createElement("p");
+             const values = document.createTextNode(qa.val.u + ": " + qa.val.p);
+             para.appendChild(values);
+             const par = document.createElement("br");
+             para.appendChild(par);
+             document.getElementById("test").insertBefore(para, document.getElementById("test").firstChild);
+           }
+         } catch (excepErr) {
+           console.log('Something went wrong parsing: ' + excepErr)
+         }
+         lp += 1
+       }
+    }
+  };
+  xhttp.open("GET", "http://" + ip + ":" + port +"/queue");
+  xhttp.send();
+}
+
+function conm() {
+  try {
+    content()
+    content()
+    content()
+    content()
+    content()
+  } catch (exceptionValue) {
+    start()
+  }
+  qwer = new Date();
+  document.getElementById("smalver").innerHTML = vers + " | Last fetch at " + qwer.toLocaleString()
+}
+  </script>
+</body>
+</html>
